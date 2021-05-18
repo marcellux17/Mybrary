@@ -3,8 +3,11 @@ if(process.env.NODE_ENV !== 'production'){
 }
 const express = require('express');
 const hbs = require('hbs');
-const router = require('./routers/routers');
 const mongoose = require('mongoose');
+
+//ROUTERS
+const indexRouter = require('./routers/index');
+const authorRouter = require('./routers/authors');
 
 const app = express();
 
@@ -12,8 +15,10 @@ app.use(express.static(__dirname + '/public'));
 app.set('view engine', 'hbs');
 app.set('views', __dirname + '/views');
 hbs.registerPartials(__dirname + '/partials');
+app.use(express.urlencoded({extended: true, limit: '10mb'}))
 
-app.use(router);
+app.use('/', indexRouter);
+app.use('/authors', authorRouter);
 
 const portNum = process.env.PORT || 3000;
 const dbURI  = process.env.DATABASE_URL;
